@@ -1,0 +1,28 @@
+{
+  "extends": [
+    "airbnb-base",
+    "plugin:import/errors"
+  ],
+  "rules": {
+    "no-console": 0,
+    "eslint-disable-line": 0,
+    "global-require": 0,
+    "eol-last": 0,
+    "import/no-extraneous-dependencies": 0
+  },
+  "plugins": ["import"],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  }
+
+}
