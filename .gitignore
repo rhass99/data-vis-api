@@ -12,7 +12,7 @@ yarn-error.log*
 .DS_Store
 .idea
 *.txt
-/app
+
 
 # Docker
 Dockerfile
