@@ -37,7 +37,7 @@
     "nodemon": "^1.18.4"
   },
   "dependencies": {
-    "bcrypt": "3.0.2",
+    "bcrypt": "https://github.com/kelektiv/node.bcrypt.js.git#master",
     "body-parser": "1.18.3",
     "express": "4.16.4"
   }
