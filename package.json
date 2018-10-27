@@ -10,7 +10,7 @@
     "lint": "eslint \"src/**/*.{js,jsx}\"",
     "clean": "rm -rf app",
     "prepush": "npm run build && rm -rf node_modules",
-    "babel-node": "NODE_ENV=development babel-node",
+    "babel-node": "NODE_ENV=dev babel-node",
     "dev": "nodemon --exec npm run babel-node -- ./src/app.js",
     "production": "node ./bin/prod",
     "build": "npm run clean && mkdir app && babel ./src -s -d ./app --copy-files"
@@ -40,6 +40,11 @@
     "bcrypt": "3.0.2",
     "body-parser": "1.18.3",
     "express": "4.16.4",
-    "request": "2.88.0"
+    "morgan": "1.9.1",
+    "pg": "7.6.0",
+    "pg-hstore": "2.3.2",
+    "pg-native": "3.0.0",
+    "request": "2.88.0",
+    "sequelize": "4.41.0"
   }
 }

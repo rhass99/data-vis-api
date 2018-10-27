@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 
 const saltRounds = 10;
-const pepper = process.env.PEPPER || '11';
+const pepper = process.env.PEPPER;
 
 // adds a pepper from server and returns a fixed length password.
 const addPepper = (plainPassword) => {

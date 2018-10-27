@@ -1,25 +1,21 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import {
-  genHash,
-  compareHash,
-} from './encrypt';
+import morgan from 'morgan';
+
 
 const app = express();
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
 app.use(bodyParser.json());
+app.use(morgan('short'));
 
-// Authentication routes
-//  - Signup
-app.post('/auth/signup', (req, res, next) => {
-  genHash(req.body.password)
-    .then((password) => {
-      compareHash(req.body.password, password)
-        .then(data => res.status(200).send(data))
-        .catch(err => next(err));
-    }).catch(err => next(err));
+
+// Error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+  next();
 });
 
 //  - Login
