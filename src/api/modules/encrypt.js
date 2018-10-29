@@ -3,17 +3,17 @@ import crypto from 'crypto';
 
 const saltRounds = 10;
 const pepper = process.env.PEPPER;
-const idGen = process.env.IDGEN;
+// const idGen = process.env.IDGEN;
 
 // adds a pepper from server and returns a fixed length ID.
-const idGenerator = (toHMAC) => {
-  if (!idGen) {
-    throw new Error('No internal idGenerator');
-  }
-  const hmac = crypto.createHmac('sha1', pepper);
-  hmac.update(toHMAC);
-  return hmac.digest('hex');
-};
+// const idGenerator = (toHMAC) => {
+//   if (!idGen) {
+//     throw new Error('No internal idGenerator');
+//   }
+//   const hmac = crypto.createHmac('sha1', pepper);
+//   hmac.update(toHMAC);
+//   return hmac.digest('hex');
+// };
 
 // adds a pepper from server and returns a fixed length password.
 const addPepper = (toHMAC) => {
@@ -27,15 +27,15 @@ const addPepper = (toHMAC) => {
 
 // returns a promise with the generated salt
 // need to save salt to database
-const genSalt = rounds => new Promise((resolve, reject) => {
-  bcrypt.genSalt(rounds, (err, salt) => {
+const genSalt = () => new Promise((resolve, reject) => {
+  bcrypt.genSalt(saltRounds, (err, salt) => {
     if (err) reject(err);
     else resolve(salt);
   });
 });
 
 // returns a promise with password hash from plain password.
-const genHash = plainPassword => new Promise((resolve, reject) => {
+const genHash = (plainPassword, dataSalt) => new Promise((resolve, reject) => {
   // uses function addPepper to pepper the password before salting it
   let pepperedPassword;
   try {
@@ -43,16 +43,10 @@ const genHash = plainPassword => new Promise((resolve, reject) => {
   } catch (err) {
     reject(err);
   }
-  // generates Salt and then uses it to hash the peppered password
-  genSalt(saltRounds).then((dataSalt) => {
-    // uses the generated salt and the peppered password to return a hashed password to store in DB
-    bcrypt.hash(pepperedPassword, dataSalt, (err, hashedPassword) => {
-      if (err) reject(err);
-      else resolve(hashedPassword);
-    });
-    // catches the error from the genSalt function
-  }).catch((err) => {
-    throw new Error('function genSalt - encrypt.js, Salt generation failed', err);
+  // uses the generated salt and the peppered password to return a hashed password to store in DB
+  bcrypt.hash(pepperedPassword, dataSalt, (err, hashedPassword) => {
+    if (err) reject(err);
+    else resolve(hashedPassword);
   });
 });
 
@@ -78,5 +72,6 @@ const compareHash = (plainPassword, dbHash) => new Promise((resolve, reject) => 
 export {
   genHash,
   compareHash,
-  idGenerator,
+  genSalt,
+  saltRounds,
 };

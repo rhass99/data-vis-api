@@ -1,3 +1,5 @@
+
+
 const createUserMw = (req, res, next) => {
   // Check if user exists
   // Create ID from email
@@ -6,13 +8,7 @@ const createUserMw = (req, res, next) => {
   // Return User to calling function
 };
 
-app.get('/user', (req, res) => {
-  const email = req.param('email');
-  console.log(email);
-  model.User.findOne({ where: { email } })
-    .then(user => res.json(user))
-    .catch(err => console.log(err));
-});
+
 
 // const checkAuth = options => (req, res, next) => {
 //   if (options.requireAuth === true) {
