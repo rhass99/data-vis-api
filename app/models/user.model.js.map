@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../src/models/user.model.js"],"names":[],"mappings":"AAAA","file":"user.model.js","sourcesContent":["/*  User should have\n- First name\n- Last name\n- Password Hash\n- Salt\n*/"]}

@@ -11,6 +11,7 @@ const basename = path.basename(__filename);
 // const config = require(`${__dirname}/../config/config.json`)[env];
 const db = {};
 let sequelize;
+let model;
 
 // Check if the application is running in development or running on heroku
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'st') {
@@ -54,7 +55,7 @@ fs
   .readdirSync(__dirname)
   .filter(file => (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js'))
   .forEach((file) => {
-    const model = sequelize.import(path.join(__dirname, file));
+    model = sequelize.import(path.join(__dirname, file));
     db[model.name] = model;
   });
 

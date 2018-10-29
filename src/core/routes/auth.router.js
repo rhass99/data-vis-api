@@ -1,8 +1,8 @@
-import app from './server';
+import app from '../server';
 import {
   genHash,
   compareHash,
-} from './encrypt';
+} from '../auth/encrypt';
 
 // Authentication routes
 //  - Signup
