@@ -1,6 +1,6 @@
-import app from './core/server';
+import app from './server';
 import db from './models/index';
-import { addUserAccount } from './core/helpers/db';
+
 // Importing dotenv to be used only in development
 // Heroku has NODE_ENV = 'production' so will not require dotenv
 if (process.env.NODE_ENV === 'dev') require('dotenv').config();

@@ -1,23 +1,19 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
+import { createUser } from './api/resources/user/user.controller';
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan('short'));
 
-//  Authentication and Authorization routes
-app
-
 // Error handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
+  console.error(err);
+  res.status(500).send(err);
   next();
 });
-
-
 
 // User routes
 //  - Profile
@@ -25,7 +21,6 @@ app.use((err, req, res, next) => {
 //  - Upload
 
 // Guest routes
-// Admin routes
 
 
 export default app;

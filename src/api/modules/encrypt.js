@@ -3,17 +3,6 @@ import crypto from 'crypto';
 
 const saltRounds = 10;
 const pepper = process.env.PEPPER;
-// const idGen = process.env.IDGEN;
-
-// adds a pepper from server and returns a fixed length ID.
-// const idGenerator = (toHMAC) => {
-//   if (!idGen) {
-//     throw new Error('No internal idGenerator');
-//   }
-//   const hmac = crypto.createHmac('sha1', pepper);
-//   hmac.update(toHMAC);
-//   return hmac.digest('hex');
-// };
 
 // adds a pepper from server and returns a fixed length password.
 const addPepper = (toHMAC) => {
