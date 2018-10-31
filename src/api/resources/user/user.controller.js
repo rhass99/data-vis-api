@@ -1,39 +1,36 @@
-import db from '../../../models/index';
-import addUserAccount from '../../modules/dbhelpers';
-
-// const findByParam = () => {
-//   // function to find user by id
-// };
-
-const findByEmail = async (email) => {
-  // function to find user by email
-  let data;
-  try {
-    data = await db.UserAccount.findOne({ where: { email } });
-    if (!data) {
-      return null;
-    }
-  } catch (err) {
-    throw err;
-  }
-  data.exists = true;
-  return data;
-};
-
-const createUser = async (req, res, next) => {
-  // function to create a new user (signup)
-  try {
-    const userCheck = await findByEmail(req.body.email);
-    if (!userCheck) {
-      res.locals.data = await addUserAccount(req.body);
-      res.locals.data.exists = false;
-    } else {
-      res.locals.data = userCheck;
-    }
-  } catch (err) {
-    next(err);
+const getOne = (req, res, next) => {
+  if (res.locals.data) {
+    res.json({
+      id: res.locals.data.id,
+      email: res.locals.data.email,
+    });
+  } else {
+    res.json({
+      user: false,
+    });
   }
   next();
 };
 
-export default createUser;
+const post = (req, res, next) => {
+  res.json({
+    id: res.locals.data.id,
+    email: res.locals.data.email,
+    user_existed: res.locals.data.exists,
+  });
+  next();
+};
+
+const get = (req, res, next) => {
+  res.send({
+    users: 'all Users',
+  });
+  next();
+};
+
+
+export default {
+  post,
+  get,
+  getOne,
+};

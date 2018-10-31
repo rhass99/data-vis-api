@@ -1,27 +1,18 @@
 import express from 'express';
-import app from '../../../server';
-import createUser from './user.controller';
+import userController from './user.controller';
+import { createUser, playme, findByParam } from './user.middleware';
 
 const userRouter = express.Router();
 
-// userRouter.param('id', userController.findByParam);
+userRouter.param('id', findByParam);
 
-app.post('/getuser', createUser, (req, res, next) => {
-  console.log('Route', res.locals.data);
-  if (res.locals.data.status === 'old') {
-    res.json({
-      id: res.locals.data.id,
-      email: res.locals.data.email,
-      user_existed: 'bibi',
-    });
-  } else {
-    res.json({
-      user: res.locals.data,
-      user_existed: false,
-    });
-  }
-  next();
-});
+userRouter.route('/')
+  // .get(playme, userController.get)
+  .post(createUser, userController.post);
 
+userRouter.route('/:id')
+  .get(userController.getOne);
+//   .put(userController.updateOne)
+//   .delete(userController.createOne)
 
 export default userRouter;

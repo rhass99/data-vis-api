@@ -1,12 +1,11 @@
 import express from 'express';
-import bodyParser from 'body-parser';
-import morgan from 'morgan';
-import { createUser } from './api/resources/user/user.controller';
+import restRouter from './api/api';
+import appMiddleware from './api/middleware/rest.middleware';
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(morgan('short'));
+appMiddleware(app);
+
+app.use('/api/', restRouter);
 
 // Error handler
 app.use((err, req, res, next) => {
