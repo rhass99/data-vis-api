@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 
 const saltRounds = 10;
-const pepper = process.env.PEPPER;
+const pepper = process.env.PEPPER || '11';
 
 // adds a pepper from server and returns a fixed length password.
 const addPepper = (toHMAC) => {
@@ -50,13 +50,15 @@ const compareHash = (plainPassword, dbHash) => new Promise((resolve, reject) => 
   });
 });
 
-// For local testing
-// genHash('rami')
-//   .then((myHash) => {
-//     compareHash('rami', myHash)
-//       .then(data => console.log(data))
-//       .catch(err => console.log(err));
-//   }).catch(err => console.log(err));
+// // For local testing
+// genSalt().then((salt) => {
+//   genHash('rami', salt)
+//     .then((myHash) => {
+//       compareHash('rami', myHash)
+//         .then(data => console.log(data))
+//         .catch(err => console.log(err));
+//     }).catch(err => console.log(err));
+// }).catch(err => console.log(err));
 
 export {
   genHash,

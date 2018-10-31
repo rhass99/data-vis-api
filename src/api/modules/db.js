@@ -1,5 +1,7 @@
 import db from '../../models/index';
-import { genHash, genSalt, saltRounds } from './encrypt';
+import {
+  genHash, genSalt, saltRounds, compareHash,
+} from './encrypt';
 
 // Create a new UserAccount in DB
 const addUserAccount = async (clientUserSignup) => {
@@ -42,11 +44,21 @@ const findByEmail = async (email) => {
     // Throws the error to the middleware function to be passed on express error handler
     throw err;
   }
-  console.log('findbyemail', data);
   return data;
+};
+
+const checkUserAccountPass = async (plain, hash) => {
+  let isRegistered = false;
+  try {
+    isRegistered = await compareHash(plain, hash);
+  } catch (err) {
+    throw err;
+  }
+  return isRegistered;
 };
 
 export {
   findByEmail,
   addUserAccount,
+  checkUserAccountPass,
 };
