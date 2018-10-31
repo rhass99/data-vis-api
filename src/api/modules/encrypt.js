@@ -60,6 +60,31 @@ const compareHash = (plainPassword, dbHash) => new Promise((resolve, reject) => 
 //     }).catch(err => console.log(err));
 // }).catch(err => console.log(err));
 
+const asyncAddHash = async (clientUserSignup) => {
+  const clientUserAcc = clientUserSignup;
+  let dataSalt;
+  try {
+    dataSalt = await bcrypt.genSalt(saltRounds);
+    clientUserAcc.password_salt = dataSalt;
+  } catch (err) {
+    throw (err);
+  }
+  try {
+    const dataHash = await bcrypt.hash(clientUserAcc.password, dataSalt);
+    clientUserAcc.password_hash = dataHash;
+  } catch (err) {
+    throw (err);
+  }
+  return clientUserAcc;
+};
+
+const myObj = {
+  password: '123',
+};
+
+asyncAddHash(myObj).then(data => console.log(data));
+
+
 export {
   genHash,
   compareHash,
