@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 
 const saltRounds = 10;
-const pepper = process.env.PEPPER || '11';
+const pepper = process.env.PEPPER;
 
 // adds a pepper from server and returns a fixed length password.
 const addPepper = (toHMAC) => {
@@ -14,43 +14,46 @@ const addPepper = (toHMAC) => {
   return hmac.digest('hex');
 };
 
-// returns a promise with the generated salt
-// need to save salt to database
-const genSalt = () => new Promise((resolve, reject) => {
-  bcrypt.genSalt(saltRounds, (err, salt) => {
-    if (err) reject(err);
-    else resolve(salt);
-  });
-});
-
-// returns a promise with password hash from plain password.
-const genHash = (plainPassword, dataSalt) => new Promise((resolve, reject) => {
-  // uses function addPepper to pepper the password before salting it
-  let pepperedPassword;
-  try {
-    pepperedPassword = addPepper(plainPassword);
-  } catch (err) {
-    reject(err);
-  }
-  // uses the generated salt and the peppered password to return a hashed password to store in DB
-  bcrypt.hash(pepperedPassword, dataSalt, (err, hashedPassword) => {
-    if (err) reject(err);
-    else resolve(hashedPassword);
-  });
-});
-
-// compares plain password with stored hash from DB returns promise with boolean value
-const compareHash = (plainPassword, dbHash) => new Promise((resolve, reject) => {
+const comparePassword = async (plainPassword, hash) => {
   // uses function addPepper to pepper the password before checking equality.
   const pepperedPassword = addPepper(plainPassword);
-  // compares peppered password with the password from DB
-  bcrypt.compare(pepperedPassword, dbHash, (err, result) => {
-    if (err) reject(err);
-    else resolve(result);
-  });
-});
+  try {
+    const truth = await bcrypt.compare(pepperedPassword, hash);
+    return truth;
+  } catch (err) {
+    throw (err);
+  }
+};
 
-// // For local testing
+
+// Returns a promise with updated object with new keys
+// password_salt and password_hash
+const hashPassword = async (clientUserSignup) => {
+  const clientUserAcc = clientUserSignup;
+  // uses function addPepper to pepper the password before checking equality.
+  const pepperedPassword = addPepper(clientUserAcc.password);
+  try {
+    // Creates salt and adds it to the clientUserAcc
+    const dataSalt = await bcrypt.genSalt(saltRounds);
+    clientUserAcc.password_salt = dataSalt;
+    // Hashes password and adds it to ClientUserAcc
+    const dataHash = await bcrypt.hash(pepperedPassword, dataSalt);
+    clientUserAcc.password_hash = dataHash;
+  } catch (err) {
+    throw (err);
+  }
+  // Returns a Promise of the ClientUserAccount
+  return clientUserAcc;
+};
+
+export {
+  hashPassword,
+  comparePassword,
+  saltRounds,
+};
+
+
+// // For local testing promise based bcrypt not used
 // genSalt().then((salt) => {
 //   genHash('rami', salt)
 //     .then((myHash) => {
@@ -60,34 +63,14 @@ const compareHash = (plainPassword, dbHash) => new Promise((resolve, reject) => 
 //     }).catch(err => console.log(err));
 // }).catch(err => console.log(err));
 
-const asyncAddHash = async (clientUserSignup) => {
-  const clientUserAcc = clientUserSignup;
-  let dataSalt;
-  try {
-    dataSalt = await bcrypt.genSalt(saltRounds);
-    clientUserAcc.password_salt = dataSalt;
-  } catch (err) {
-    throw (err);
-  }
-  try {
-    const dataHash = await bcrypt.hash(clientUserAcc.password, dataSalt);
-    clientUserAcc.password_hash = dataHash;
-  } catch (err) {
-    throw (err);
-  }
-  return clientUserAcc;
-};
+// const myObj = {
+//   password: '123',
+// };
 
-const myObj = {
-  password: '123',
-};
-
-asyncAddHash(myObj).then(data => console.log(data));
-
-
-export {
-  genHash,
-  compareHash,
-  genSalt,
-  saltRounds,
-};
+// hashPassword(myObj)
+//   .then((data) => {
+//     comparePassword(myObj.password, data.password_hash)
+//       .then(truth => console.log(truth))
+//       .catch(err => console.log('compare', err));
+//   })
+//   .catch(err => console.log('hash', err));
