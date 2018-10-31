@@ -22,9 +22,12 @@ const post = (req, res, next) => {
 };
 
 const get = (req, res, next) => {
-  res.send({
-    users: 'all Users',
-  });
+  res.json({ users: 'all users' });
+  next();
+};
+
+const login = (req, res, next) => {
+  res.json(res.locals.data);
   next();
 };
 
@@ -33,4 +36,5 @@ export default {
   post,
   get,
   getOne,
+  login,
 };
