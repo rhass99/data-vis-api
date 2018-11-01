@@ -25,13 +25,11 @@ const comparePassword = async (plainPassword, hash) => {
   }
 };
 
-
 // Returns a promise with updated object with new keys
 // password_salt and password_hash
-const hashPassword = async (clientUserSignup) => {
-  const clientUserAcc = clientUserSignup;
+const hashPassword = async (clientUserAcc) => {
   // uses function addPepper to pepper the password before checking equality.
-  const pepperedPassword = addPepper(clientUserAcc.password);
+  const pepperedPassword = addPepper(clientUserAcc.password_hash);
   try {
     // Creates salt and adds it to the clientUserAcc
     const dataSalt = await bcrypt.genSalt(saltRounds);
@@ -39,6 +37,8 @@ const hashPassword = async (clientUserSignup) => {
     // Hashes password and adds it to ClientUserAcc
     const dataHash = await bcrypt.hash(pepperedPassword, dataSalt);
     clientUserAcc.password_hash = dataHash;
+    clientUserAcc.password_strength = saltRounds;
+    console.log(clientUserAcc);
   } catch (err) {
     throw (err);
   }
@@ -46,7 +46,7 @@ const hashPassword = async (clientUserSignup) => {
   return clientUserAcc;
 };
 
-export {
+export default {
   hashPassword,
   comparePassword,
   saltRounds,

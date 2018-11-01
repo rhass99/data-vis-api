@@ -4,17 +4,9 @@ import { findByEmail, addUserAccount, checkUserAccountPass } from '../../modules
 // Create a new user on signup after checking existance in DB
 const createUser = async (req, res, next) => {
   try {
-    // Check UserAccount already exists in DB
-    const userCheck = await findByEmail(req.body.email);
-    // If UserAccount is new, add it to DB and return it with the lable "exists = false"
-    if (!userCheck) {
-      res.locals.data = await addUserAccount(req.body);
-      res.locals.data.exists = false;
-    } else {
-      // Return UserAccount if already exists with lable "exists = true"
-      res.locals.data = userCheck;
-      res.locals.data.exists = true;
-    }
+    console.log(req.body);
+    res.locals.data = await db.UserAccount.create(req.body);
+    res.locals.data.exists = false;
   } catch (err) {
     next(err);
   }

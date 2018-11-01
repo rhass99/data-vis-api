@@ -1,3 +1,5 @@
+const myhooks = require('../api/resources/user/user.hooks');
+
 module.exports = (sequelize, DataTypes) => {
   const UserAccount = sequelize.define('UserAccount', {
     id: {
@@ -11,6 +13,14 @@ module.exports = (sequelize, DataTypes) => {
     password_hash: DataTypes.STRING,
     password_strength: DataTypes.INTEGER,
     password_salt: DataTypes.STRING,
-  }, {});
+
+  }, {
+    hooks: {
+      async beforeCreate(userAccount) {
+        await myhooks.createUser(userAccount);
+      },
+    },
+  });
+
   return UserAccount;
 };
