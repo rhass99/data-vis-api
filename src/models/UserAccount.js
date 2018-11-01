@@ -1,4 +1,4 @@
-const myhooks = require('../api/resources/user/user.hooks');
+import myhooks from '../api/resources/user/user.hooks';
 
 module.exports = (sequelize, DataTypes) => {
   const UserAccount = sequelize.define('UserAccount', {
@@ -21,6 +21,5 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
   });
-
   return UserAccount;
 };

@@ -38,7 +38,6 @@ const hashPassword = async (clientUserAcc) => {
     const dataHash = await bcrypt.hash(pepperedPassword, dataSalt);
     clientUserAcc.password_hash = dataHash;
     clientUserAcc.password_strength = saltRounds;
-    console.log(clientUserAcc);
   } catch (err) {
     throw (err);
   }

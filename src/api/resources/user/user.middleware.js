@@ -1,10 +1,9 @@
 import db from '../../../models/index';
-import { findByEmail, addUserAccount, checkUserAccountPass } from '../../modules/db';
+import helpers from './user.hooks';
 
 // Create a new user on signup after checking existance in DB
 const createUser = async (req, res, next) => {
   try {
-    console.log(req.body);
     res.locals.data = await db.UserAccount.create(req.body);
     res.locals.data.exists = false;
   } catch (err) {
@@ -31,10 +30,10 @@ const findByParam = async (req, res, next, id) => {
 const authUser = async (req, res, next) => {
   try {
     // Check UserAccount already exists in DB
-    const userCheck = await findByEmail(req.body.email);
+    const userCheck = await helpers.findByEmail(req.body.email);
     // If UserAccount is registered, pass it to check password.
     if (userCheck) {
-      const isRegistered = await checkUserAccountPass(req.body.password, userCheck.password_hash);
+      const isRegistered = await helpers.checkUserAccountPass(req.body.password, userCheck.password_hash);
       if (isRegistered) {
         // Return UserAccount and password correct
         res.locals.data = {

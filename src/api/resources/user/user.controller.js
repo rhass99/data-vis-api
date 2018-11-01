@@ -13,11 +13,13 @@ const getOne = (req, res, next) => {
 };
 
 const post = (req, res, next) => {
-  res.json({
-    id: res.locals.data.id,
-    email: res.locals.data.email,
-    user_existed: res.locals.data.exists,
-  });
+  if (res.locals.data) {
+    res.json({
+      id: res.locals.data.id,
+      email: res.locals.data.email,
+      user_existed: res.locals.data.exists,
+    });
+  }
   next();
 };
 

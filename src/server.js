@@ -9,6 +9,13 @@ app.use('/api/', restRouter);
 
 // Error handler
 app.use((err, req, res, next) => {
+  if (err.message === 'User Exists in Database, cannot create') {
+    res.status(200).json({ user: err.message });
+  }
+  next();
+});
+
+app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).send(err);
   next();
