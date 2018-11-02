@@ -21,5 +21,9 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
   });
+
+  UserAccount.playme = () => {
+    console.log('playme123');
+  };
   return UserAccount;
 };

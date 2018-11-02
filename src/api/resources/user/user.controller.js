@@ -28,15 +28,15 @@ const get = (req, res, next) => {
   next();
 };
 
-const login = (req, res, next) => {
-  res.json(res.locals.data);
-  next();
-};
+// const login = (req, res, next) => {
+//   res.json(res.locals.data);
+//   next();
+// };
 
 
 export default {
   post,
   get,
   getOne,
-  login,
+  // login,
 };
