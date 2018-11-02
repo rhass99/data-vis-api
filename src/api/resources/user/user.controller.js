@@ -1,9 +1,7 @@
+// Get UserAccount by email or ID based on params
 const getOne = (req, res, next) => {
   if (res.locals.data) {
-    res.json({
-      id: res.locals.data.id,
-      email: res.locals.data.email,
-    });
+    res.json(res.locals.data);
   } else {
     res.json({
       user: false,
@@ -12,31 +10,30 @@ const getOne = (req, res, next) => {
   next();
 };
 
+// Signup user
 const post = (req, res, next) => {
   if (res.locals.data) {
-    res.json({
-      id: res.locals.data.id,
-      email: res.locals.data.email,
-      user_existed: res.locals.data.exists,
-    });
+    res.json(res.locals.data);
   }
   next();
 };
 
+// Get all users
 const get = (req, res, next) => {
   res.json({ users: 'all users' });
   next();
 };
 
-// const login = (req, res, next) => {
-//   res.json(res.locals.data);
-//   next();
-// };
+// Login User
+const login = (req, res, next) => {
+  res.json(res.locals.data);
+  next();
+};
 
 
 export default {
   post,
   get,
   getOne,
-  // login,
+  login,
 };

@@ -45,10 +45,22 @@ const hashPassword = async (clientUserAcc) => {
   return clientUserAcc;
 };
 
+// Check for account password - used in UserAccount middleware
+const checkUserAccountPass = async (plain, hash) => {
+  let isRegistered = false;
+  try {
+    isRegistered = await comparePassword(plain, hash);
+  } catch (err) {
+    throw err;
+  }
+  return isRegistered;
+};
+
 export default {
   hashPassword,
   comparePassword,
   saltRounds,
+  checkUserAccountPass,
 };
 
 
