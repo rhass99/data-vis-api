@@ -1,5 +1,6 @@
 import db from '../../../models/index';
 import encrypt from '../../modules/encrypt';
+import jwtSign from '../../modules/jwtauth';
 
 // Create a new user on signup after checking existance in DB
 const createUser = async (req, res, next) => {
@@ -72,6 +73,11 @@ const loginUser = async (req, res, next) => {
     if (userCheck) {
       const isRegistered = await encrypt.checkUserAccountPass(req.body.password_hash, userCheck.password_hash);
       if (isRegistered) {
+        // JWT token generation
+        const generatedToken = await jwtSign({
+          id: userCheck.id,
+          status: 'user',
+        });
         // Return UserAccount and password correct
         res.locals.data = {
           userAccount: true,
@@ -82,6 +88,7 @@ const loginUser = async (req, res, next) => {
             first_name: userCheck.first_name,
             last_name: userCheck.last_name,
           },
+          token: generatedToken,
         };
       } else {
         // Return UserAccount exists, password wrong, empty user

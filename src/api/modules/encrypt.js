@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 
-const saltRounds = 10;
+const saltRounds = parseInt(process.env.SALT_ROUNDS, 10);
 const pepper = process.env.PEPPER;
 
 // adds a pepper from server and returns a fixed length password.

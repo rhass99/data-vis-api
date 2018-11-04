@@ -13,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
     password_hash: DataTypes.STRING,
     password_strength: DataTypes.INTEGER,
     password_salt: DataTypes.STRING,
-
   }, {
     hooks: {
       async beforeCreate(userAccount) {
