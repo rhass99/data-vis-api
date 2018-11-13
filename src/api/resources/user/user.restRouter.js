@@ -4,22 +4,17 @@ import mid from './user.middleware';
 
 const userRouter = express.Router();
 
-userRouter.param('id', mid.findById);
-userRouter.param('email', mid.findByEmail);
+// userRouter.param('id', mid.checkToken);
+// userRouter.param('email', mid.checkToken);
 
 userRouter.route('/')
   .get(controller.get)
   .post(mid.createUser, controller.post);
 
 userRouter.route('/id/:id')
-  .get(controller.getOne);
+  .get(mid.checkToken, controller.getOne);
 //   .put(userController.updateOne)
 //   .delete(userController.createOne)
-
-userRouter.route('/email/:email')
-  .get(controller.getOne);
-// .put(userController.updateOne)
-// .delete(userController.createOne)
 
 
 userRouter.route('/login')

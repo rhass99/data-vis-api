@@ -1,63 +1,24 @@
 import db from '../../../models/index';
 import encrypt from '../../modules/encrypt';
-import jwtSign from '../../modules/jwtauth';
+import jw from '../../modules/jwtauth';
 
 // Create a new user on signup after checking existance in DB
 const createUser = async (req, res, next) => {
   try {
-    // Configure passed object to controller
+    // Configure passed object to controller - DONE
     // Runs createUser Hook before creating the User
     // Hook checks if user exists and hashes password
     const data = await db.UserAccount.create(req.body);
+    // JWT token generation
+    const generatedToken = await jw.jwtSign({
+      id: data.id,
+      status: 'user',
+    });
     data.exists = false;
     res.locals.data = {
-      id: data.id,
-      email: data.email,
+      token: generatedToken,
       user_existed: data.exists,
     };
-  } catch (err) {
-    next(err);
-  }
-  next();
-};
-
-// Search DB for UserAccount by ID
-// Used as middleware by restRouter Param function
-const findById = async (req, res, next, id) => {
-  try {
-    const data = await db.UserAccount.findByPk(id);
-    if (data) {
-      // Configure passed object to the controller
-      res.locals.data = {
-        id: data.id,
-        first_name: data.first_name,
-        last_name: data.last_name,
-        email: data.email,
-        password_hash: data.password_hash,
-      };
-    }
-  } catch (err) {
-    next(err);
-  }
-  next();
-};
-
-// Search DB for UserAccount by email.
-// Used as middleware by restRouter Param function
-const findByEmail = async (req, res, next, email) => {
-  try {
-    // Checks for UserAccount existence in DB by email
-    const data = await db.UserAccount.findOne({ where: { email } });
-    if (data) {
-      // Configure passed object to the controller
-      res.locals.data = {
-        id: data.id,
-        first_name: data.first_name,
-        last_name: data.last_name,
-        email: data.email,
-        password_hash: data.password_hash,
-      };
-    }
   } catch (err) {
     next(err);
   }
@@ -74,7 +35,7 @@ const loginUser = async (req, res, next) => {
       const isRegistered = await encrypt.checkUserAccountPass(req.body.password_hash, userCheck.password_hash);
       if (isRegistered) {
         // JWT token generation
-        const generatedToken = await jwtSign({
+        const generatedToken = await jw.jwtSign({
           id: userCheck.id,
           status: 'user',
         });
@@ -82,12 +43,6 @@ const loginUser = async (req, res, next) => {
         res.locals.data = {
           userAccount: true,
           userPassword: true,
-          userData: {
-            id: userCheck.id,
-            email: userCheck.email,
-            first_name: userCheck.first_name,
-            last_name: userCheck.last_name,
-          },
           token: generatedToken,
         };
       } else {
@@ -95,7 +50,7 @@ const loginUser = async (req, res, next) => {
         res.locals.data = {
           userAccount: true,
           userPassword: false,
-          userData: {},
+          token: {},
         };
       }
     } else {
@@ -103,8 +58,40 @@ const loginUser = async (req, res, next) => {
       res.locals.data = {
         userAccount: false,
         userPassword: false,
-        userData: {},
+        token: {},
       };
+    }
+  } catch (err) {
+    next(err);
+  }
+  next();
+};
+
+const checkToken = async (req, res, next) => {
+  try {
+    // Get the decoded token from jwtVerify
+    if (req.headers.authorization) {
+      const decodedToken = await jw.jwtVerify(req.headers.authorization);
+      // Check user exists in Database
+      // Returns userID and email
+      if (decodedToken.payload.id === req.params.id) {
+        const data = await db.UserAccount.findByPk(decodedToken.payload.id);
+        if (data) {
+          // Configure passed object to the controller
+          res.locals.data = {
+            id: data.id,
+            first_name: data.first_name,
+            last_name: data.last_name,
+            email: data.email,
+          };
+        }
+      } else {
+        const userError = new Error('JWT compromised');
+        throw userError;
+      }
+    } else {
+      const noTokenErro = new Error('No Token');
+      throw noTokenErro;
     }
   } catch (err) {
     next(err);
@@ -114,7 +101,6 @@ const loginUser = async (req, res, next) => {
 
 export default {
   createUser,
-  findById,
-  findByEmail,
   loginUser,
+  checkToken,
 };

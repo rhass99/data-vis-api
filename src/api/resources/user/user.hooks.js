@@ -10,7 +10,7 @@ const createUser = async (clientUserAccount) => {
     if (!userCheck) {
       return encrypt.hashPassword(clientUserAccount);
     }
-    const existsError = new Error('User Exists in Database, cannot create');
+    const existsError = new Error('User already exists');
     throw existsError;
   } catch (err) {
     return db.sequelize.Promise.reject(err);
