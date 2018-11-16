@@ -17,6 +17,7 @@ const createUser = async (req, res, next) => {
     data.exists = false;
     res.locals.data = {
       token: generatedToken,
+      id: data.id,
       user_existed: data.exists,
     };
   } catch (err) {
