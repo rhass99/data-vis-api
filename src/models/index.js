@@ -1,7 +1,7 @@
 // Import filesystem to recognize where the models are
-import fs from 'fs';
-import path from 'path';
-import Sequelize from 'sequelize';
+const fs = require('fs');
+const path = require('path');
+const Sequelize = require('sequelize');
 
 // Load dotenv environment variable DB_URI and PORT 3000
 if (process.env.NODE_ENV === 'dev') require('dotenv').config();
@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'st') {
   sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
     protocol: 'postgres',
-    logging: false, // false -- Check Logging and Sync options???
+    logging: true, // false -- Check Logging and Sync options???
     native: true,
     pool: {
       max: 5,
@@ -70,4 +70,4 @@ db.Sequelize = Sequelize;
 
 // Export the database object
 // Use to Authenticate db in the server.js file, while use model to query db
-export default db;
+module.exports(db);
