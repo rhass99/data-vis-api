@@ -5,7 +5,7 @@ import db from './models/index';
 // Heroku has NODE_ENV = 'production' so will not require dotenv
 if (process.env.NODE_ENV === 'dev') require('dotenv').config();
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT;
 
 app.listen(PORT, () => console.log(`Serving on: http://localhost:${PORT}`));
 
