@@ -1,44 +1,42 @@
-'use strict';
-
 const up = (queryInterface, Sequelize) => queryInterface.createTable('UserAccounts', {
   id: {
     type: Sequelize.UUID,
     primaryKey: true,
     allowNull: false,
-    unique: true
+    unique: true,
   },
   first_name: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   last_name: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   email: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true
+    unique: true,
   },
   password_hash: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   password_strength: {
     type: Sequelize.INTEGER,
-    allowNull: false
+    allowNull: false,
   },
   password_salt: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   createdAt: Sequelize.DATE,
-  updatedAt: Sequelize.DATE
+  updatedAt: Sequelize.DATE,
 }, {
   indexes: [{
     unique: true,
-    fields: ['id', 'email']
-  }]
+    fields: ['id', 'email'],
+  }],
 });
 
 const down = (queryInterface, Sequelize) => queryInterface.dropTable('UserAccounts');
@@ -49,6 +47,5 @@ const down = (queryInterface, Sequelize) => queryInterface.dropTable('UserAccoun
     Example:
 */
 module.exports = {
-  up, down
+  up, down,
 };
-//# sourceMappingURL=20181028215233-create-UserLogin-model.js.map
